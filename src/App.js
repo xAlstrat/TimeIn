@@ -249,23 +249,29 @@ class App extends Component {
     }
 
     save(){
+        const data = {
+            activities: this.state.activities.map((act)=>({
+                name: act.name,
+                investment: act.investment,
+                invested: act.invested.asSeconds(),
+                duration: act.duration.asSeconds(),
+                countdown: act.countdown,
+                active: this.state.currentActivity && this.state.currentActivity.name === act.name,
+            })),
+           compactView: this.state.compactView,
+        };
         const {cookies} = this.props;
-        cookies.set('app', this.state.activities.map((act)=>({
-            name: act.name,
-            investment: act.investment,
-            invested: act.invested.asSeconds(),
-            duration: act.duration.asSeconds(),
-            countdown: act.countdown,
-            active: this.state.currentActivity && this.state.currentActivity.name === act.name,
-        })), {
+        cookies.set('app', data, {
             expires: new Date('2999-01-01'),
         });
     }
 
     load(){
         const {cookies} = this.props;
-        let acts = cookies.get('app') || [];
-        acts = acts.map((act)=>{
+        let app = cookies.get('app') || {compactView: false, activities: []};
+        if(app instanceof Array)
+            app = {compactView: false, activities: app};
+        const acts = app.activities.map((act)=>{
             let {invested, duration, ...rest} = act;
             return {
                 ...rest,
@@ -273,7 +279,11 @@ class App extends Component {
                 duration: moment.duration(duration, 'seconds'),
             }
         });
-        this.setState({activities: acts, activitiesLoaded: true}, ()=>{
+        this.setState({
+            activities: acts,
+            activitiesLoaded: true,
+            compactView: app.compactView,
+        }, ()=>{
             this.state.activities.map((act)=>act.active && act.inverter.start())
         });
     }
