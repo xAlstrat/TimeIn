@@ -193,10 +193,11 @@ export class TimeInvester extends Component{
         };
     }
     render(){
+        const compactedClass = this.props.compacted?' hidden':'';
         const disableInputs = this.chronometer && (this.chronometer.state.paused || this.chronometer.state.started);
         return (
             <div>
-                <div className='invested-time text-center'>
+                <div className={'invested-time text-center' + compactedClass}>
                     <span>Ya invertiste </span>
                     <span>
                         <Badge>
@@ -206,7 +207,7 @@ export class TimeInvester extends Component{
                         </Badge>
                     </span>
                 </div>
-                <FormGroup controlId="formValidationSuccess1">
+                <FormGroup controlId="formValidationSuccess1" className={compactedClass}>
                     <Checkbox onChange={this.onChangeCheckbox}
                               disabled={disableInputs}
                               checked={this.state.countdown}><strong>

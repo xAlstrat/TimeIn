@@ -27,6 +27,7 @@ class App extends Component {
             inputName: '',
             activitiesLoaded: false,
             hideInactive: false,
+            compactView: false,
         };
         this.onInvest = this.onInvest.bind(this);
         this.onChangeInvestment = this.onChangeInvestment.bind(this);
@@ -40,6 +41,7 @@ class App extends Component {
         this.removeAllActivities = this.removeAllActivities.bind(this);
         this.resetAllActivities = this.resetAllActivities.bind(this);
         this.toggleShowActivities = this.toggleShowActivities.bind(this);
+        this.toggleCompactView = this.toggleCompactView.bind(this);
 
         this.SortableItem = SortableElement(({value}) =>
             this.buildActivity(value)
@@ -60,6 +62,7 @@ class App extends Component {
     render() {
         const activityAlreadyExists = this.checkIfActivityExists();
         const hideInactive = this.state.hideInactive;
+        const compactView = this.state.compactView;
         return (
             <Grid className='app'>
                 <Row componentClass='show-grid'>
@@ -98,6 +101,15 @@ class App extends Component {
                             <InputGroup>
                                 <InputGroup.Button>
                                     <Button bsStyle='info'
+                                            title={compactView?'Vista extendida':'Vista compacta'}
+                                            className='form-control'
+                                            disabled={this.state.activities.length==0}
+                                            onClick={this.toggleCompactView}>
+                                        <Glyphicon glyph={compactView?'resize-full':'resize-small'} />
+                                    </Button>
+                                </InputGroup.Button>
+                                <InputGroup.Button>
+                                    <Button bsStyle='default'
                                             title={hideInactive?'Mostrar todo':'Ocultar inactivas'}
                                             className='form-control'
                                             disabled={this.state.activities.length==0}
@@ -117,7 +129,7 @@ class App extends Component {
                                             className='form-control'
                                             onClick={this.removeAllActivities}
                                             disabled={this.state.activities.length==0}
-                                            type='submit'>Remover actividades <Glyphicon glyph="alert" />
+                                            type='submit'>Eliminar todo <Glyphicon glyph="alert" />
                                     </Button>
                                 </InputGroup.Button>
                             </InputGroup>
@@ -167,6 +179,7 @@ class App extends Component {
                             investment={activity.investment}
                             countdown={activity.countdown}
                             duration={activity.duration}
+                            compacted={this.state.compactView}
                             onInvest={(inv)=>this.onInvest(inv, activity)}
                             onStart={()=>this.onInverterStart(activity)}
                             onPause={()=>this.onInvesterPaused(activity)}
@@ -225,6 +238,10 @@ class App extends Component {
 
     toggleShowActivities(){
         this.setState({hideInactive:!this.state.hideInactive});
+    }
+
+    toggleCompactView(){
+        this.setState({compactView:!this.state.compactView});
     }
 
     checkIfActivityExists(){
