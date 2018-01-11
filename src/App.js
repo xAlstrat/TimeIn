@@ -180,6 +180,7 @@ class App extends Component {
                             countdown={activity.countdown}
                             duration={activity.duration}
                             compacted={this.state.compactView}
+                            lastDatetime={activity.lastDatetime}
                             onInvest={(inv)=>this.onInvest(inv, activity)}
                             onStart={()=>this.onInverterStart(activity)}
                             onPause={()=>this.onInvesterPaused(activity)}
@@ -256,6 +257,7 @@ class App extends Component {
                 invested: act.invested.asSeconds(),
                 duration: act.duration.asSeconds(),
                 countdown: act.countdown,
+                lastDatetime: act.lastDatetime && act.lastDatetime.format(),
                 active: this.state.currentActivity && this.state.currentActivity.name === act.name,
             })),
            compactView: this.state.compactView,
@@ -272,9 +274,10 @@ class App extends Component {
         if(app instanceof Array)
             app = {compactView: false, activities: app};
         const acts = app.activities.map((act)=>{
-            let {invested, duration, ...rest} = act;
+            let {invested, duration, lastDatetime, ...rest} = act;
             return {
                 ...rest,
+                lastDatetime: lastDatetime && moment(lastDatetime),
                 invested: moment.duration(invested, 'seconds'),
                 duration: moment.duration(duration, 'seconds'),
             }
@@ -295,6 +298,7 @@ class App extends Component {
 
     onInverterStart(activity){
         activity.active = true;
+        activity.lastDatetime = activity.inverter.chronometer.state.lastDatetime;
         if(this.state.currentActivity) {
             this.state.currentActivity.active = false;
             this.state.currentActivity.inverter.pause(false);
@@ -308,6 +312,7 @@ class App extends Component {
     }
 
     onInvest(invested, activity){
+        activity.lastDatetime = activity.inverter.chronometer.state.lastDatetime;
         this.setState({activities: this.state.activities}, this.save);
     }
 

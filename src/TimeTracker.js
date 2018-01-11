@@ -17,7 +17,7 @@ export class Chronometer extends Component{
         super(props);
         this.state = {
             duration: props.duration,
-            lastDatetime: moment(),
+            lastDatetime: props.lastDatetime || moment(),
             paused: false,
             started: false,
             countdown: props.countdown?true:false,
@@ -230,6 +230,7 @@ export class TimeInvester extends Component{
                              onResume={this.onResume}
                              onStop={this.onStop}
                              duration={this.state.duration}
+                             lastDatetime={this.props.lastDatetime}
                              targetDuration={this.state.targetDuration}/>
             </div>
         );
