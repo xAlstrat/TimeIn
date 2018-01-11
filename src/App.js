@@ -165,7 +165,7 @@ class App extends Component {
                                   onClick={()=>this.resetActivity(activity, index)}><Glyphicon glyph="repeat" /></span>
                             <span className='option-item danger'
                                   title={'Eliminar actividad'}
-                                  onClick={()=>this.removeActivity(index)}><Glyphicon glyph="remove" /></span>
+                                  onClick={()=>this.removeActivity(activity, index)}><Glyphicon glyph="remove" /></span>
                         </div>
                     </Panel.Heading>
                     <Panel.Body>
@@ -226,6 +226,8 @@ class App extends Component {
 
     removeActivity(activity, index){
         if(window.confirm('Se perderán las horas invertidas en esta actividad.')){
+            if(this.state.currentActivity && (activity.name === this.state.currentActivity.name))
+                this.setState({currentActivity: null});
             this.state.activities.splice(index, 1);
             this.setState({activities: this.state.activities}, this.save);
         }
@@ -287,7 +289,7 @@ class App extends Component {
             activitiesLoaded: true,
             compactView: app.compactView,
         }, ()=>{
-            this.state.activities.map((act)=>act.active && act.inverter.start())
+            this.state.activities.map((act)=>act.active && act.inverter.start(true))
         });
     }
 

@@ -120,14 +120,15 @@ export class Chronometer extends Component{
         }, ()=>this.onTimeElapsed(elapsedTimeInMilliseconds));
     }
 
-    start(callback){
+    start(event, resumed){
         this.intervalId = setInterval(()=>{
             if(!this.state.paused){
                 this.timeElapsed();
                 this.onTick(this);
             }
         }, 1000);
-        this.setState({started: true, lastDatetime: moment()}, this.onStart);
+        const lastDatetime = resumed?this.state.lastDatetime:moment();
+        this.setState({started: true, lastDatetime: lastDatetime}, this.onStart);
     }
 
     reset(){
@@ -247,7 +248,7 @@ export class TimeInvester extends Component{
     }
 
     start(callback){
-        this.chronometer.start(callback);
+        this.chronometer.start(null, true);
     }
 
     pause(callback){
