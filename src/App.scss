@@ -1,0 +1,95 @@
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.app{
+
+}
+
+.app .app-resume{
+  font-size: 18px;
+}
+
+.app .app-resume strong{
+  font-size: 36px;
+}
+
+.app .investment-item .invested-time, .app .investment-item .invested-time .badge{
+  font-size: 16px;
+}
+
+.investment-item h2{
+  margin-top: 5px;
+}
+
+.investment-item .form-group{
+  margin-bottom: 5px;
+}
+
+.investment-item .play{
+  margin-bottom: 5px;
+}
+
+.app .options-container{
+  position: relative;
+}
+
+.app .options.options-right{
+  right: 5px;
+  top: 10px;
+}
+
+.app .options.options-middle{
+  right: 1em;
+  top: calc(50% - .5em);
+}
+
+body .options-container .options{
+  display: none;
+}
+
+.app .options-container .options{
+  position: absolute;
+  display: inline-block;
+  font-size: 12px;
+  color: white;
+
+  .option-item{
+    padding: 5px;
+    margin: 2px;
+    background-color: #bad2d2;
+    border-radius: 2px;
+  }
+
+  .option-item:hover{
+    cursor: pointer;
+  }
+
+  .option-item.info{
+    background-color: #94cee9;
+  }
+
+  .option-item.info:hover{
+    background-color: #62afd4;
+  }
+
+  .option-item.danger{
+    background-color: #e7a0b7;
+  }
+
+  .option-item.danger:hover{
+    background-color: palevioletred;
+  }
+
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
