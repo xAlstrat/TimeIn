@@ -17,7 +17,7 @@ export class Chronometer extends Component{
         super(props);
         this.state = {
             duration: props.duration,
-            startedAt: moment(),
+            lastDatetime: moment(),
             paused: false,
             started: false,
             countdown: props.countdown?true:false,
@@ -103,34 +103,38 @@ export class Chronometer extends Component{
         clearInterval(this.intervalId);
     }
 
-    timeElapsed(elapsedTimeInSeconds) {
+    timeElapsed() {
+        let elapsedTimeInMilliseconds = moment().diff(this.state.lastDatetime);
         let duration = null;
         if (!this.state.countdown)
-            duration = this.state.duration.add(elapsedTimeInSeconds, 'second');
+            duration = this.state.duration.add(elapsedTimeInMilliseconds, 'millisecond');
         else {
-            duration = this.state.duration.subtract(elapsedTimeInSeconds, 'second');
-            if(duration.asSeconds() <= 0){
+            duration = this.state.duration.subtract(elapsedTimeInMilliseconds, 'millisecond');
+            if(duration.asMilliseconds() <= 0){
                 this.stop();
             }
         }
-        this.setState({duration: duration}, ()=>this.onTimeElapsed(elapsedTimeInSeconds));
+        this.setState({
+            duration: duration,
+            lastDatetime: moment(),
+        }, ()=>this.onTimeElapsed(elapsedTimeInMilliseconds));
     }
 
     start(callback){
         this.intervalId = setInterval(()=>{
             if(!this.state.paused){
-                this.timeElapsed(1);
+                this.timeElapsed();
                 this.onTick(this);
             }
         }, 1000);
-        this.setState({started: true}, this.onStart);
+        this.setState({started: true, lastDatetime: moment()}, this.onStart);
     }
 
     reset(){
         clearInterval(this.intervalId);
         this.setState(
             {
-                startedAt: moment(),
+                lastDatetime: moment(),
                 paused: false,
                 started: false,
                 duration: !this.state.countdown?
@@ -145,7 +149,7 @@ export class Chronometer extends Component{
     }
 
     resume(){
-        this.setState({paused:false}, this.onResume);
+        this.setState({paused:false, lastDatetime: moment()}, this.onResume);
     }
 
     stop(){
@@ -154,7 +158,7 @@ export class Chronometer extends Component{
     }
 
     forward(){
-        this.timeElapsed(this.state.duration.asSeconds())
+        this.timeElapsed(this.state.duration.asMilliseconds())
     }
 }
 
@@ -259,18 +263,14 @@ export class TimeInvester extends Component{
         this.onChangeInvestment(event.target.value);
     }
 
-    onTick(secondsElapsed){
-        this.timeElapsed(secondsElapsed);
-    }
-
     onChangeCheckbox(e){
         const checked = e.target.checked;
         this.setState({countdown: checked}, ()=>this.onCheckboxChanged(checked));
     }
 
-    timeElapsed(timeInSeconds){
-        this.onInvest(timeInSeconds);
-        const invested = this.state.invested.add(timeInSeconds, 'second');
+    timeElapsed(millisecondsElapsed){
+        this.onInvest(millisecondsElapsed);
+        const invested = this.state.invested.add(millisecondsElapsed, 'millisecond');
         this.setState({invested: invested});
     }
 }
