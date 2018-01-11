@@ -241,7 +241,7 @@ class App extends Component {
     }
 
     toggleCompactView(){
-        this.setState({compactView:!this.state.compactView});
+        this.setState({compactView:!this.state.compactView}, this.save);
     }
 
     checkIfActivityExists(){
